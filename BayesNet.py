@@ -30,9 +30,12 @@ class Node:
     '''
     def conditionalProbability(self):
         index = 0
+        print(self.parents)
         for i, p in enumerate(self.parents):
             if p.value == False:
                 index += 2 ** (len(self.parents) - i - 1)
+
+        print("index da probabilidade: %d ",index)
 
         return self.probs[index]
 
@@ -60,18 +63,8 @@ class BayesNet:
         for node in self.nodes:
             strings.append(node.name + " = " + str(node.value))
 
-        print ", ".join(strings)
+        print(", ".join(strings))
 
-    '''
-    Calculates probability that a child will play outside base on
-    whether it is raining or not.  Returns the conditional
-    probabilities that a child will play when it is raining and when
-    it is not raining.
-
-    rainingInstances
-            A set of training examples in the form {raining, playing}
-            from which to compute the probabilities.
-    '''
     def calculatePlayOutsideProbabilities(self, rainingInstances):
         playing = [0, 0]
         total = [0, 0]
@@ -133,6 +126,7 @@ class BayesNet:
     N
             The number of iterations to perform rejection sampling
     '''
+
     def rejectionSampling(self, queryNode, indicesOfEvidenceNodes,
                           evidenceValues, N):
         counts = [0, 0]
@@ -310,32 +304,34 @@ if __name__ == "__main__":
     b = BayesNet()
 
     prob = b.calculatePlayOutsideProbabilities(PLAYING_EXAMPLES)
-    print "When it is raining, I play outside %.5f%% of the time." % (prob[0]*100)
-    print "When it is not raining, I play outside %.5f%% of the time." % (prob[1]*100)
+    print( "When it is raining, I play outside %.5f%% of the time." % (prob[0]*100))
+    print( "When it is not raining, I play outside %.5f%% of the time." % (prob[1]*100))
 
-    print ""
+    print( "")
 
     # Sample five state from joint distribution and print them
     for i in range(5):
         b.priorSample()
         b.printState()
 
-    # Print out the results of experiments with various inference methods
+    # Print( out the results of experiments with various inference methods
     # Rejection Sampling
-    print "\nRejection Sampling"
-    print "P(rain | wet grass, ~playing outside) = %.5f" % b.rejectionSampling(3, [4, 5], [False, True], 10000)
-    print "P(sprinklers | drought) = %.5f" % b.rejectionSampling(2, [1], [True], 100000)
-    print "P(wet grass | rain, sprinklers) = %.5f" % b.rejectionSampling(5, [2, 3], [True, True], 10000000)
+    '''
+    print( "\nRejection Sampling")
+    print( "P(rain | wet grass, ~playing outside) = %.5f" % b.rejectionSampling(3, [4, 5], [False, True], 10000))
+    print( "P(sprinklers | drought) = %.5f" % b.rejectionSampling(2, [1], [True], 100000))
+    print( "P(wet grass | rain, sprinklers) = %.5f" % b.rejectionSampling(5, [2, 3], [True, True], 10000000))
 
     # Likelihood Weighting
-    print "\nLikelihood Weighting"
-    print "P(rain | wet grass, ~playing outside) = %.5f" % b.likelihoodWeighting(3, [4, 5], [False, True], 10000)
-    print "P(sprinklers | drought) = %.5f" % b.likelihoodWeighting(2, [1], [True], 100000)
-    print "P(wet grass | rain, sprinklers) = %.5f" % b.likelihoodWeighting(5, [2, 3], [True, True], 10000000)
+    print( "\nLikelihood Weighting")
+    print( "P(rain | wet grass, ~playing outside) = %.5f" % b.likelihoodWeighting(3, [4, 5], [False, True], 10000))
+    print( "P(sprinklers | drought) = %.5f" % b.likelihoodWeighting(2, [1], [True], 100000))
+    print( "P(wet grass | rain, sprinklers) = %.5f" % b.likelihoodWeighting(5, [2, 3], [True, True], 10000000))
 
     # MCMC
-    print "\nMCMC"
-    print "P(rain | wet grass, ~playing outside) = %.5f" % b.MCMCask(3, [4, 5], [False, True], 10000)
-    print "P(sprinklers | drought) = %.5f" % b.MCMCask(2, [1], [True], 100000)
-    print "P(wet grass | rain, sprinklers) = %.5f" % b.MCMCask(5, [2, 3], [True, True], 10000000)
+    print( "\nMCMC")
+    print( "P(rain | wet grass, ~playing outside) = %.5f" % b.MCMCask(3, [4, 5], [False, True], 10000))
+    print( "P(sprinklers | drought) = %.5f" % b.MCMCask(2, [1], [True], 100000))
+    print( "P(wet grass | rain, sprinklers) = %.5f" % b.MCMCask(5, [2, 3], [True, True], 10000000))
+    '''
 
